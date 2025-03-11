@@ -5,20 +5,29 @@ import time
 from dotenv import load_dotenv
 from pathlib import Path
 
+# Load environment variables
+load_dotenv()
+
 # Get the absolute path to the .env file and load it
 env_path = Path(__file__).parent.parent / '.env'
 load_dotenv(dotenv_path=env_path, override=True)
 
-# Get API Key with validation
-HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
+# Get API key with a default value
+HUGGINGFACE_API_KEY = os.getenv('HUGGINGFACE_API_KEY')
 if not HUGGINGFACE_API_KEY:
-    raise ValueError("HUGGINGFACE_API_KEY not found in environment variables")
+    # Instead of raising an error, provide a fallback response
+    print("Warning: HUGGINGFACE_API_KEY not found in environment variables")
+    HUGGINGFACE_API_KEY = None
 
 HUGGINGFACE_MODEL = "gpt2"
 API_URL = f"https://api-inference.huggingface.co/models/{HUGGINGFACE_MODEL}"
 
 def generate_creative_text(prompt: str, max_retries: int = 3) -> str:
     """Helper function to generate creative text with retries"""
+    if not HUGGINGFACE_API_KEY:
+        # Provide a fallback response when API key is not available
+        return f"Sample text for: {prompt}"
+
     headers = {
         "Authorization": f"Bearer {HUGGINGFACE_API_KEY}",
         "Content-Type": "application/json"
