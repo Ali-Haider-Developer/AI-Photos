@@ -28,7 +28,11 @@ async def startup_event():
         print(f"⚠️ Error during startup: {str(e)}")
         # Continue running even if Qdrant setup fails
 
-app.include_router(router)
+# Include router after startup configuration
+try:
+    app.include_router(router)
+except Exception as e:
+    print(f"⚠️ Warning: Error including router: {str(e)}")
 
 @app.get("/")
 def read_root():

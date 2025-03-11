@@ -16,7 +16,7 @@ load_dotenv(dotenv_path=env_path, override=True)
 HUGGINGFACE_API_KEY = os.getenv('HUGGINGFACE_API_KEY')
 if not HUGGINGFACE_API_KEY:
     print("Warning: HUGGINGFACE_API_KEY not found in environment variables")
-    HUGGINGFACE_API_KEY = None
+    HUGGINGFACE_API_KEY = None  # Set to None instead of raising error
 
 # Get model name from environment or use default
 HUGGINGFACE_MODEL = os.getenv("HUGGINGFACE_TEXT_MODEL", "gpt2")
