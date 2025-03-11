@@ -30,20 +30,30 @@ designs_db: Dict[str, dict] = {}
 async def generate_text_route(event_type: str, theme: str):
     try:
         result = generate_text(event_type, theme)
-        return result
+        if isinstance(result, dict) and "error" in result.get("generated_text", {}):
+            return {
+                "status": "partial_success",
+                "message": "Generated with fallback content",
+                "data": result
+            }
+        return {
+            "status": "success",
+            "data": result
+        }
     except Exception as e:
         print(f"❌ Error: {str(e)}")
-        raise HTTPException(
-            status_code=500,
-            detail={
-                "error": str(e),
-                "fallback_text": {
+        return {
+            "status": "error",
+            "message": "Internal server error",
+            "error": str(e),
+            "data": {
+                "generated_text": {
                     "headline": f"{theme.title()} {event_type}",
                     "tagline": f"Experience the magic of {theme}",
                     "description": f"Join us for an unforgettable {event_type} experience themed around {theme}."
                 }
             }
-        )
+        }
 
 @router.post("/generate-image/")
 async def generate_image_route(prompt: str, size: str = "512x512"):

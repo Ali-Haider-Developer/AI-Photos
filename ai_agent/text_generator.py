@@ -15,7 +15,6 @@ load_dotenv(dotenv_path=env_path, override=True)
 # Get API key with a default value
 HUGGINGFACE_API_KEY = os.getenv('HUGGINGFACE_API_KEY')
 if not HUGGINGFACE_API_KEY:
-    # Instead of raising an error, provide a fallback response
     print("Warning: HUGGINGFACE_API_KEY not found in environment variables")
     HUGGINGFACE_API_KEY = None
 
@@ -25,8 +24,15 @@ API_URL = f"https://api-inference.huggingface.co/models/{HUGGINGFACE_MODEL}"
 def generate_creative_text(prompt: str, max_retries: int = 3) -> str:
     """Helper function to generate creative text with retries"""
     if not HUGGINGFACE_API_KEY:
-        # Provide a fallback response when API key is not available
-        return f"Sample text for: {prompt}"
+        # Return a default response when API key is not available
+        return {
+            "generated_text": {
+                "headline": f"Sample Headline for {prompt}",
+                "tagline": f"Sample Tagline for {prompt}",
+                "description": f"Sample Description for {prompt}",
+                "error": "HUGGINGFACE_API_KEY not configured"
+            }
+        }
 
     headers = {
         "Authorization": f"Bearer {HUGGINGFACE_API_KEY}",
@@ -72,7 +78,14 @@ def generate_creative_text(prompt: str, max_retries: int = 3) -> str:
                 break
             time.sleep(2)
     
-    return None
+    return {
+        "generated_text": {
+            "headline": f"Error generating headline for {prompt}",
+            "tagline": "Service temporarily unavailable",
+            "description": "Please try again later",
+            "error": "Failed to generate text after multiple attempts"
+        }
+    }
 
 def generate_text(event_type: str, theme: str) -> dict:
     """Generate creative text for events with structured output"""
