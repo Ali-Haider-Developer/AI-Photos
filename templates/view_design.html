@@ -1,0 +1,83 @@
+<html>
+    <head>
+        <title>View Design</title>
+        <style>
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                font-family: Arial, sans-serif;
+            }
+            .design-card {
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                padding: 20px;
+            }
+            .image-container {
+                text-align: center;
+                margin: 20px 0;
+            }
+            .image-container img {
+                max-width: 100%;
+                border-radius: 8px;
+            }
+            .design-info {
+                background: #f8f9fa;
+                padding: 15px;
+                border-radius: 8px;
+                margin: 15px 0;
+            }
+            .actions {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 10px;
+                margin-top: 20px;
+            }
+            .btn {
+                background: #4CAF50;
+                color: white;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 6px;
+                text-align: center;
+            }
+            .score {
+                display: inline-block;
+                background: #2196F3;
+                color: white;
+                padding: 5px 10px;
+                border-radius: 20px;
+                font-size: 0.9em;
+                margin-top: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="design-card">
+                <h2>Design Details</h2>
+                
+                <div class="design-info">
+                    <p><strong>ID:</strong> {{ design_id }}</p>
+                    <p><strong>Created:</strong> {{ created_at }}</p>
+                    <p><strong>Event Type:</strong> {{ event_type }}</p>
+                    <p><strong>Theme:</strong> {{ theme }}</p>
+                    {% if similarity_score != "N/A" %}
+                    <p><span class="score">{{ similarity_score }}% Match</span></p>
+                    {% endif %}
+                </div>
+
+                <div class="image-container">
+                    <img src="{{ image_display }}" alt="Design Preview">
+                </div>
+
+                <div class="actions">
+                    <a href="/edit-design/{{ design_id }}" class="btn">Edit Design</a>
+                    <a href="/download-search-design/{{ design_id }}" class="btn">Download Design</a>
+                    <a href="/" class="btn">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html> 
