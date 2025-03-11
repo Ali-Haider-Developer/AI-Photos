@@ -26,6 +26,7 @@ async def startup_event():
             print("⚠️ Warning: Qdrant connection test failed")
     except Exception as e:
         print(f"⚠️ Error during startup: {str(e)}")
+        # Continue running even if Qdrant setup fails
 
 app.include_router(router)
 

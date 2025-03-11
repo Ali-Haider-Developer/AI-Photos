@@ -3,14 +3,18 @@ import requests
 from dotenv import load_dotenv
 from pathlib import Path
 
+# Load environment variables
+load_dotenv()
+
 # Get the absolute path to the .env file and load it
 env_path = Path(__file__).parent.parent / '.env'
 load_dotenv(dotenv_path=env_path, override=True)
 
-# Get API Key with validation
-HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
+# Get API key with a default value
+HUGGINGFACE_API_KEY = os.getenv('HUGGINGFACE_API_KEY')
 if not HUGGINGFACE_API_KEY:
-    raise ValueError("HUGGINGFACE_API_KEY not found in environment variables")
+    print("Warning: HUGGINGFACE_API_KEY not found in environment variables")
+    HUGGINGFACE_API_KEY = None
 
 STABLE_DIFFUSION_MODEL = os.getenv("STABLE_DIFFUSION_MODEL", "runwayml/stable-diffusion-v1-5")
 API_URL = f"https://api-inference.huggingface.co/models/{STABLE_DIFFUSION_MODEL}"
