@@ -3,6 +3,7 @@ import requests
 from dotenv import load_dotenv
 from pathlib import Path
 
+
 # Load environment variables
 load_dotenv()
 
