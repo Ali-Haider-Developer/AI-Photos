@@ -11,5 +11,8 @@
       "src": "/(.*)",
       "dest": "hello.py"
     }
-  ]
+  ],
+  "env": {
+    "PYTHONUNBUFFERED": "1"
+  }
 } 
