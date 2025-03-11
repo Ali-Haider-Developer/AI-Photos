@@ -10,7 +10,7 @@ load_dotenv()
 env_path = Path(__file__).parent.parent / '.env'
 load_dotenv(dotenv_path=env_path, override=True)
 
-# Get API key with a default value
+# Get API key with a default value - NO RAISING ERROR HERE
 HUGGINGFACE_API_KEY = os.getenv('HUGGINGFACE_API_KEY')
 if not HUGGINGFACE_API_KEY:
     print("Warning: HUGGINGFACE_API_KEY not found in environment variables")
@@ -21,6 +21,10 @@ API_URL = f"https://api-inference.huggingface.co/models/{STABLE_DIFFUSION_MODEL}
 
 def generate_image(prompt: str, size: str) -> bytes:
     try:
+        if not HUGGINGFACE_API_KEY:
+            # Return a placeholder image or error response
+            return None
+
         headers = {
             "Authorization": f"Bearer {HUGGINGFACE_API_KEY}"
         }
@@ -42,11 +46,12 @@ def generate_image(prompt: str, size: str) -> bytes:
         if response.status_code == 200:
             return response.content
         elif response.status_code == 401:
-            raise Exception("Authentication failed. Please check your API key.")
+            print("❌ Authentication failed. Please check your API key.")
+            return None
         else:
             print(f"❌ Error: {response.text}")
-            raise Exception(f"Image generation failed with status code: {response.status_code}")
+            return None
             
     except Exception as e:
         print(f"❌ Error generating image: {str(e)}")
-        raise Exception(f"Error generating image: {str(e)}") 
+        return None 
